@@ -1,1 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Support Ticketing System</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 600px; margin: 40px auto; padding: 20px; background: #f4f7f6; }
+        .card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        input, textarea { width: 100%; padding: 10px; margin: 8px 0 16px 0; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+        button { background: #007bff; color: white; border: none; padding: 10px 15px; border-radius: 4px; cursor: pointer; }
+        button:hover { background: #0056b3; }
+        .ticket-item { background: #e9ecef; padding: 10px; margin-top: 10px; border-radius: 4px; }
+    </style>
+</head>
+<body>
 
+    <div class="card">
+        <h2>Submit a Support Ticket</h2>
+        <form id="ticketForm">
+            <label for="name">Your Name:</label>
+            <input type="text" id="name" required>
+
+            <label for="issue">Describe your issue:</label>
+            <textarea id="issue" rows="4" required></textarea>
+
+            <button type="submit">Submit Ticket</button>
+        </form>
+    </div>
+
+    <div class="card">
+        <h2>Open Tickets</h2>
+        <div id="ticketList">No tickets submitted yet.</div>
+    </div>
+
+    <script>
+        const form = document.getElementById('ticketForm');
+        const ticketList = document.getElementById('ticketList');
+
+        // Load saved tickets from localStorage
+        let tickets = JSON.parse(localStorage.getItem('tickets')) || [];
+        renderTickets();
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const name = document.getElementById('name').value;
+            const issue = document.getElementById('issue').value;
+
+            const newTicket = { id: Date.now(), name, issue, status: 'Open' };
+            tickets.push(newTicket);
+            localStorage.setItem('tickets', JSON.stringify(tickets));
+
+            renderTickets();
+            form.reset();
+        });
+
+        function renderTickets() {
+            if (tickets.length === 0) {
+                ticketList.innerHTML = 'No tickets submitted yet.';
+                return;
+            }
+            ticketList.innerHTML = tickets.map(t => `
+                <div class="ticket-item">
+                    <strong>Ticket #${t.id.toString().slice(-4)}</strong> - <em>${t.name}</em><br>
+                    <p>${t.issue}</p>
+                    <small>Status: <strong>${t.status}</strong></small>
+                </div>
+            `).join('');
+        }
+    </script>
+</body>
+</html>
