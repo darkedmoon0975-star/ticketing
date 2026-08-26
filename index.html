@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HelpDesk Pro | Dashboard</title>
+    <title>HelpDesk Pro | Portal</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -21,58 +21,103 @@
             background-color: var(--bg-color);
             color: var(--text-main);
             margin: 0;
-            padding: 40px 20px;
+            padding: 0;
         }
 
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
+        /* --- LOGIN SCREEN --- */
+        #loginScreen {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
         }
 
-        header {
+        .login-card {
+            background: white;
+            padding: 32px;
+            border-radius: 16px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .login-card h2 {
+            margin-top: 0;
+            color: var(--primary);
+            text-align: center;
+            margin-bottom: 8px;
+        }
+
+        .login-card p {
+            color: var(--text-muted);
+            text-align: center;
+            font-size: 14px;
             margin-bottom: 24px;
         }
 
-        header h1 {
-            font-size: 26px;
+        /* --- APP CONTAINER (Sidebar Layout) --- */
+        #appContainer {
+            display: none; /* Hidden until login */
+            min-height: 100vh;
+            display: flex;
+        }
+
+        .sidebar {
+            width: 280px;
+            background: var(--card-bg);
+            border-right: 1px solid var(--border);
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            box-sizing: border-box;
+        }
+
+        .sidebar h2 {
+            font-size: 20px;
             color: var(--primary);
             margin: 0 0 4px 0;
         }
 
-        header p {
+        .sidebar p {
             color: var(--text-muted);
-            font-size: 14px;
+            font-size: 13px;
             margin: 0;
         }
 
-        /* Dashboard Metrics Grid */
-        .dashboard-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 16px;
-            margin-bottom: 24px;
+        .metric-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
         }
 
         .metric-card {
-            background: var(--card-bg);
-            padding: 16px;
-            border-radius: 12px;
+            background: var(--bg-color);
+            padding: 14px;
+            border-radius: 10px;
             border: 1px solid var(--border);
-            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
         }
 
         .metric-card h3 {
-            margin: 0 0 8px 0;
-            font-size: 12px;
+            margin: 0 0 4px 0;
+            font-size: 11px;
             color: var(--text-muted);
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
 
         .metric-card .value {
-            font-size: 24px;
+            font-size: 20px;
             font-weight: 700;
             color: var(--text-main);
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 32px;
+            box-sizing: border-box;
+            max-width: 900px;
         }
 
         .card {
@@ -214,86 +259,124 @@
             font-size: 14px;
         }
 
+        .logout-btn {
+            background: #f1f5f9;
+            color: #475569;
+            margin-top: auto;
+        }
+        .logout-btn:hover { background: #e2e8f0; }
+
         @media (max-width: 768px) {
-            .dashboard-grid { grid-template-columns: repeat(2, 1fr); }
-            .form-grid { grid-template-columns: 1fr; }
-            .form-group.full { grid-column: span 1; }
+            #appContainer { flex-direction: column; }
+            .sidebar { width: 100%; }
         }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <header>
-            <h1>HelpDesk Pro Dashboard</h1>
-            <p>Real-time analytics and support ticket management.</p>
-        </header>
-
-        <!-- Metrics Dashboard Row -->
-        <div class="dashboard-grid">
-            <div class="metric-card">
-                <h3>Total Tickets</h3>
-                <div class="value" id="statTotal">0</div>
-            </div>
-            <div class="metric-card">
-                <h3>Open Tickets</h3>
-                <div class="value" id="statOpen" style="color: #166534;">0</div>
-            </div>
-            <div class="metric-card">
-                <h3>High Priority</h3>
-                <div class="value" id="statHigh" style="color: #991b1b;">0</div>
-            </div>
-            <div class="metric-card">
-                <h3>Resolved</h3>
-                <div class="value" id="statResolved" style="color: #475569;">0</div>
-            </div>
-        </div>
-
-        <!-- Submit Form Card -->
-        <div class="card">
-            <h2>Create New Ticket</h2>
-            <form id="ticketForm">
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label for="name">Your Name</label>
-                        <input type="text" id="name" placeholder="John Doe" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="category">Category</label>
-                        <select id="category">
-                            <option value="Technical Bug">Technical Bug</option>
-                            <option value="Billing Issue">Billing Issue</option>
-                            <option value="Feature Request">Feature Request</option>
-                            <option value="General Inquiry">General Inquiry</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="priority">Priority Level</label>
-                        <select id="priority">
-                            <option value="Low">Low</option>
-                            <option value="Medium" selected>Medium</option>
-                            <option value="High">High</option>
-                        </select>
-                    </div>
-                    <div class="form-group full">
-                        <label for="issue">Describe Your Issue</label>
-                        <textarea id="issue" rows="3" placeholder="Provide as much detail as possible..." required></textarea>
-                    </div>
+    <!-- Login Screen View -->
+    <div id="loginScreen">
+        <div class="login-card">
+            <h2>HelpDesk Pro</h2>
+            <p>Please log in to access the dashboard</p>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" placeholder="admin" required>
                 </div>
-                <button type="submit">Submit Support Ticket</button>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" placeholder="••••••••" required>
+                </div>
+                <button type="submit">Log In</button>
             </form>
-        </div>
-
-        <!-- Tickets List Card -->
-        <div class="card">
-            <h2>Active Tickets</h2>
-            <div id="ticketList">
-                <div class="empty-state">No active tickets found.</div>
-            </div>
+            <p style="margin-top: 16px; font-size: 12px;">Hint: Use any username and password (e.g., admin / admin)</p>
         </div>
     </div>
 
+    <!-- Main App Container (Hidden initially) -->
+    <div id="appContainer">
+        <!-- Left Sidebar Dashboard -->
+        aside class="sidebar">
+            <div>
+                <h2>HelpDesk Pro</h2>
+                <p>Support Control Center</p>
+            </div>
+
+            <div class="metric-group">
+                <div class="metric-card">
+                    <h3>Total Tickets</h3>
+                    <div class="value" id="statTotal">0</div>
+                </div>
+                <div class="metric-card">
+                    <h3>Open Tickets</h3>
+                    <div class="value" id="statOpen" style="color: #166534;">0</div>
+                </div>
+                <div class="metric-card">
+                    <h3>High Priority</h3>
+                    <div class="value" id="statHigh" style="color: #991b1b;">0</div>
+                </div>
+                <div class="metric-card">
+                    <h3>Resolved</h3>
+                    <div class="value" id="statResolved" style="color: #475569;">0</div>
+                </div>
+            </div>
+
+            <button class="logout-btn" onclick="logout()">Log Out</button>
+        </aside>
+
+        <!-- Right Content Area -->
+        <main class="main-content">
+            <!-- Submit Form Card -->
+            <div class="card">
+                <h2>Create New Ticket</h2>
+                <form id="ticketForm">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="name">Your Name</label>
+                            <input type="text" id="name" placeholder="John Doe" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="category">Category</label>
+                            <select id="category">
+                                <option value="Technical Bug">Technical Bug</option>
+                                <option value="Billing Issue">Billing Issue</option>
+                                <option value="Feature Request">Feature Request</option>
+                                <option value="General Inquiry">General Inquiry</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="priority">Priority Level</label>
+                            <select id="priority">
+                                <option value="Low">Low</option>
+                                <option value="Medium" selected>Medium</option>
+                                <option value="High">High</option>
+                            </select>
+                        </div>
+                        <div class="form-group full">
+                            <label for="issue">Describe Your Issue</label>
+                            <textarea id="issue" rows="3" placeholder="Provide as much detail as possible..." required></textarea>
+                        </div>
+                    </div>
+                    <button type="submit">Submit Support Ticket</button>
+                </form>
+            </div>
+
+            <!-- Tickets List Card -->
+            <div class="card">
+                <h2>Active Tickets</h2>
+                <div id="ticketList">
+                    <div class="empty-state">No active tickets found.</div>
+                </div>
+            </div>
+        </main>
+    </div>
+
     <script>
+        const loginScreen = document.getElementById('loginScreen');
+        const appContainer = document.getElementById('appContainer');
+        const loginForm = document.getElementById('loginForm');
+
         const form = document.getElementById('ticketForm');
         const ticketList = document.getElementById('ticketList');
         
@@ -304,7 +387,31 @@
         const statResolved = document.getElementById('statResolved');
 
         let tickets = JSON.parse(localStorage.getItem('tickets')) || [];
-        updateDashboard();
+        let isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+
+        // Check initial login state
+        if (isLoggedIn) {
+            showDashboard();
+        }
+
+        loginForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            // Simple authentication check (accepts any credentials for this demo)
+            localStorage.setItem('isLoggedIn', 'true');
+            showDashboard();
+        });
+
+        function logout() {
+            localStorage.setItem('isLoggedIn', 'false');
+            loginScreen.style.display = 'flex';
+            appContainer.style.display = 'none';
+        }
+
+        function showDashboard() {
+            loginScreen.style.display = 'none';
+            appContainer.style.display = 'flex';
+            updateDashboard();
+        }
 
         form.addEventListener('submit', function(e) {
             e.preventDefault();
@@ -348,13 +455,11 @@
         }
 
         function updateDashboard() {
-            // Update stats numbers
             statTotal.textContent = tickets.length;
             statOpen.textContent = tickets.filter(t => t.status === 'Open').length;
             statHigh.textContent = tickets.filter(t => t.priority === 'High' && t.status === 'Open').length;
             statResolved.textContent = tickets.filter(t => t.status === 'Resolved').length;
 
-            // Render list
             if (tickets.length === 0) {
                 ticketList.innerHTML = '<div class="empty-state">No active tickets found.</div>';
                 return;
