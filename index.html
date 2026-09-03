@@ -3,487 +3,548 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HelpDesk Pro | Portal</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --primary: #6366f1;
-            --primary-hover: #4f46e5;
-            --bg-color: #f8fafc;
-            --card-bg: #ffffff;
-            --text-main: #1e293b;
-            --text-muted: #64748b;
-            --border: #e2e8f0;
-        }
 
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            margin: 0;
-            padding: 0;
-        }
+    <title>IT Ticketing System</title>
 
-        /* --- LOGIN SCREEN --- */
-        #loginScreen {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
-        }
+    <link rel="stylesheet" href="style.css">
 
-        .login-card {
-            background: gray;
-            padding: 32px;
-            border-radius: 16px;
-            width: 100%;
-            max-width: 400px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-        }
-
-        .login-card h2 {
-            margin-top: 0;
-            color: var(--primary);
-            text-align: center;
-            margin-bottom: 8px;
-        }
-
-        .login-card p {
-            color: var(--text-muted);
-            text-align: center;
-            font-size: 14px;
-            margin-bottom: 24px;
-        }
-
-        /* --- APP CONTAINER (Sidebar Layout) --- */
-        #appContainer {
-            display: none; /* Hidden until login */
-            min-height: 100vh;
-            display: flex;
-        }
-
-        .sidebar {
-            width: 280px;
-            background: var(--card-bg);
-            border-right: 1px solid var(--border);
-            padding: 24px;
-            display: flex;
-            flex-direction: column;
-            gap: 24px;
-            box-sizing: border-box;
-        }
-
-        .sidebar h2 {
-            font-size: 20px;
-            color: var(--primary);
-            margin: 0 0 4px 0;
-        }
-
-        .sidebar p {
-            color: var(--text-muted);
-            font-size: 13px;
-            margin: 0;
-        }
-
-        .metric-group {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .metric-card {
-            background: var(--bg-color);
-            padding: 14px;
-            border-radius: 10px;
-            border: 1px solid var(--border);
-        }
-
-        .metric-card h3 {
-            margin: 0 0 4px 0;
-            font-size: 11px;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .metric-card .value {
-            font-size: 20px;
-            font-weight: 700;
-            color: var(--text-main);
-        }
-
-        .main-content {
-            flex: 1;
-            padding: 32px;
-            box-sizing: border-box;
-            max-width: 900px;
-        }
-
-        .card {
-            background: var(--card-bg);
-            padding: 24px;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-            margin-bottom: 24px;
-            border: 1px solid var(--border);
-        }
-
-        .card h2 {
-            font-size: 18px;
-            margin-top: 0;
-            margin-bottom: 16px;
-            border-bottom: 2px solid var(--bg-color);
-            padding-bottom: 8px;
-        }
-
-        .form-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 16px;
-        }
-
-        .form-group {
-            margin-bottom: 16px;
-        }
-
-        .form-group.full {
-            grid-column: span 2;
-        }
-
-        label {
-            display: block;
-            font-size: 13px;
-            font-weight: 600;
-            margin-bottom: 6px;
-        }
-
-        input, select, textarea {
-            width: 100%;
-            padding: 10px 14px;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            font-size: 14px;
-            box-sizing: border-box;
-            font-family: inherit;
-        }
-
-        input:focus, select:focus, textarea:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
-        }
-
-        button {
-            background: var(--primary);
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background 0.2s;
-            width: 100%;
-        }
-
-        button:hover {
-            background: var(--primary-hover);
-        }
-
-        .ticket-item {
-            background: #fff;
-            border: 1px solid var(--border);
-            padding: 16px;
-            border-radius: 8px;
-            margin-bottom: 12px;
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-        }
-
-        .ticket-info h3 {
-            margin: 0 0 4px 0;
-            font-size: 15px;
-        }
-
-        .ticket-info p {
-            margin: 8px 0;
-            color: var(--text-muted);
-            font-size: 14px;
-        }
-
-        .meta {
-            font-size: 12px;
-            color: var(--text-muted);
-            display: flex;
-            gap: 12px;
-            align-items: center;
-        }
-
-        .badge {
-            padding: 3px 8px;
-            border-radius: 6px;
-            font-size: 11px;
-            font-weight: 600;
-            text-transform: uppercase;
-        }
-
-        .badge.low { background: #e0f2fe; color: #0369a1; }
-        .badge.medium { background: #fef9c3; color: #854d0e; }
-        .badge.high { background: #fee2e2; color: #991b1b; }
-
-        .badge.status-open { background: #dcfce7; color: #166534; }
-        .badge.status-resolved { background: #f1f5f9; color: #475569; text-decoration: line-through; }
-
-        .ticket-actions {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-            align-items: flex-end;
-        }
-
-        .btn-sm {
-            padding: 5px 10px;
-            font-size: 12px;
-            width: auto;
-            background: #e2e8f0;
-            color: var(--text-main);
-        }
-        .btn-sm:hover { background: #cbd5e1; }
-
-        .empty-state {
-            text-align: center;
-            color: var(--text-muted);
-            padding: 20px;
-            font-size: 14px;
-        }
-
-        .logout-btn {
-            background: #f1f5f9;
-            color: #475569;
-            margin-top: auto;
-        }
-        .logout-btn:hover { background: #e2e8f0; }
-
-        @media (max-width: 768px) {
-            #appContainer { flex-direction: column; }
-            .sidebar { width: 100%; }
-        }
-    </style>
+    <!-- Icons -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 </head>
+
 <body>
 
-    <!-- Login Screen View -->
-    <div id="loginScreen">
-        <div class="login-card">
-            <h2>HelpDesk Pro</h2>
-            <p>Please log in to access the dashboard</p>
-            <form id="loginForm">
-                <div class="form-group">
-                    <label for="username">Username</label>
-                    <input type="text" id="username" placeholder="admin" required>
-                </div>
-                <div class="form-group">
-                    <label for="password">Password</label>
-                    <input type="password" id="password" placeholder="••••••••" required>
-                </div>
-                <button type="submit">Log In</button>
-            </form>
-            <p style="margin-top: 16px; font-size: 12px;">Hint: Use any username and password (e.g., admin / admin)</p>
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+
+        <div class="logo">
+            <i class="fa-solid fa-ticket"></i>
+            <span>IT TICKETING</span>
         </div>
-    </div>
 
-    <!-- Main App Container (Hidden initially) -->
-    <div id="appContainer">
-        <!-- Left Sidebar Dashboard -->
-        aside class="sidebar">
+        <ul class="menu">
+
+            <li class="active" onclick="showPage('dashboard')">
+                <i class="fa-solid fa-chart-line"></i>
+                <span>Dashboard</span>
+            </li>
+
+            <li onclick="showPage('tickets')">
+                <i class="fa-solid fa-ticket"></i>
+                <span>My Tickets</span>
+            </li>
+
+            <li onclick="showPage('create')">
+                <i class="fa-solid fa-plus"></i>
+                <span>Create Ticket</span>
+            </li>
+
+            <li onclick="showPage('allTickets')">
+                <i class="fa-solid fa-list"></i>
+                <span>All Tickets</span>
+            </li>
+
+            <li onclick="showPage('users')">
+                <i class="fa-solid fa-users"></i>
+                <span>Users</span>
+            </li>
+
+            <li onclick="showPage('reports')">
+                <i class="fa-solid fa-chart-pie"></i>
+                <span>Reports</span>
+            </li>
+
+        </ul>
+
+        <div class="sidebar-bottom">
+
+            <li>
+                <i class="fa-solid fa-gear"></i>
+                <span>Settings</span>
+            </li>
+
+            <li>
+                <i class="fa-solid fa-right-from-bracket"></i>
+                <span>Logout</span>
+            </li>
+
+        </div>
+
+    </aside>
+
+
+    <!-- MAIN CONTENT -->
+    <main class="main">
+
+        <!-- TOP BAR -->
+        <header class="topbar">
+
             <div>
-                <h2>HelpDesk Pro</h2>
-                <p>Support Control Center</p>
+                <h2 id="pageTitle">Dashboard</h2>
+                <p>Welcome to the IT Ticketing System</p>
             </div>
 
-            <div class="metric-group">
-                <div class="metric-card">
-                    <h3>Total Tickets</h3>
-                    <div class="value" id="statTotal">0</div>
+            <div class="profile">
+
+                <div class="notification">
+                    <i class="fa-regular fa-bell"></i>
                 </div>
-                <div class="metric-card">
-                    <h3>Open Tickets</h3>
-                    <div class="value" id="statOpen" style="color: #166534;">0</div>
+
+                <div class="user">
+                    <div class="avatar">D</div>
+
+                    <div>
+                        <strong>Dave</strong>
+                        <small>IT Support</small>
+                    </div>
                 </div>
-                <div class="metric-card">
-                    <h3>High Priority</h3>
-                    <div class="value" id="statHigh" style="color: #991b1b;">0</div>
-                </div>
-                <div class="metric-card">
-                    <h3>Resolved</h3>
-                    <div class="value" id="statResolved" style="color: #475569;">0</div>
-                </div>
+
             </div>
 
-            <button class="logout-btn" onclick="logout()">Log Out</button>
-        </aside>
+        </header>
 
-        <!-- Right Content Area -->
-        <main class="main-content">
-            <!-- Submit Form Card -->
-            <div class="card">
-                <h2>Create New Ticket</h2>
+
+        <!-- ================= DASHBOARD ================= -->
+
+        <section id="dashboard" class="page active-page">
+
+            <div class="cards">
+
+                <div class="card">
+                    <div>
+                        <p>Total Tickets</p>
+                        <h1 id="totalTickets">0</h1>
+                    </div>
+
+                    <div class="card-icon blue">
+                        <i class="fa-solid fa-ticket"></i>
+                    </div>
+                </div>
+
+
+                <div class="card">
+                    <div>
+                        <p>Open Tickets</p>
+                        <h1 id="openTickets">0</h1>
+                    </div>
+
+                    <div class="card-icon orange">
+                        <i class="fa-solid fa-folder-open"></i>
+                    </div>
+                </div>
+
+
+                <div class="card">
+                    <div>
+                        <p>In Progress</p>
+                        <h1 id="progressTickets">0</h1>
+                    </div>
+
+                    <div class="card-icon purple">
+                        <i class="fa-solid fa-spinner"></i>
+                    </div>
+                </div>
+
+
+                <div class="card">
+                    <div>
+                        <p>Resolved</p>
+                        <h1 id="resolvedTickets">0</h1>
+                    </div>
+
+                    <div class="card-icon green">
+                        <i class="fa-solid fa-circle-check"></i>
+                    </div>
+                </div>
+
+            </div>
+
+
+            <!-- RECENT TICKETS -->
+
+            <div class="section-box">
+
+                <div class="section-header">
+                    <h3>Recent Tickets</h3>
+
+                    <button onclick="showPage('create')" class="primary-btn">
+                        <i class="fa-solid fa-plus"></i>
+                        New Ticket
+                    </button>
+                </div>
+
+
+                <div class="table-container">
+
+                    <table>
+
+                        <thead>
+                            <tr>
+                                <th>Ticket ID</th>
+                                <th>Subject</th>
+                                <th>Category</th>
+                                <th>Priority</th>
+                                <th>Status</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="recentTickets">
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ================= MY TICKETS ================= -->
+
+        <section id="tickets" class="page">
+
+            <div class="section-box">
+
+                <div class="section-header">
+                    <h3>My Tickets</h3>
+
+                    <button onclick="showPage('create')" class="primary-btn">
+                        <i class="fa-solid fa-plus"></i>
+                        Create Ticket
+                    </button>
+                </div>
+
+                <div class="table-container">
+
+                    <table>
+
+                        <thead>
+                            <tr>
+                                <th>Ticket ID</th>
+                                <th>Subject</th>
+                                <th>Category</th>
+                                <th>Priority</th>
+                                <th>Status</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="myTickets">
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ================= CREATE TICKET ================= -->
+
+        <section id="create" class="page">
+
+            <div class="form-box">
+
+                <div class="section-header">
+                    <h3>Create New Ticket</h3>
+                </div>
+
+
                 <form id="ticketForm">
-                    <div class="form-grid">
+
+                    <div class="form-row">
+
                         <div class="form-group">
-                            <label for="name">Your Name</label>
-                            <input type="text" id="name" placeholder="John Doe" required>
+
+                            <label>Subject</label>
+
+                            <input
+                                type="text"
+                                id="subject"
+                                placeholder="Enter ticket subject"
+                                required>
+
                         </div>
+
+
                         <div class="form-group">
-                            <label for="category">Category</label>
-                            <select id="category">
-                                <option value="Technical Bug">Technical Bug</option>
-                                <option value="Billing Issue">Billing Issue</option>
-                                <option value="Feature Request">Feature Request</option>
-                                <option value="General Inquiry">General Inquiry</option>
+
+                            <label>Category</label>
+
+                            <select id="category" required>
+
+                                <option value="">Select Category</option>
+
+                                <option value="Hardware">
+                                    Hardware
+                                </option>
+
+                                <option value="Software">
+                                    Software
+                                </option>
+
+                                <option value="Network">
+                                    Network
+                                </option>
+
+                                <option value="Printer">
+                                    Printer
+                                </option>
+
+                                <option value="Account">
+                                    Account
+                                </option>
+
                             </select>
+
                         </div>
-                        <div class="form-group">
-                            <label for="priority">Priority Level</label>
-                            <select id="priority">
-                                <option value="Low">Low</option>
-                                <option value="Medium" selected>Medium</option>
-                                <option value="High">High</option>
-                            </select>
-                        </div>
-                        <div class="form-group full">
-                            <label for="issue">Describe Your Issue</label>
-                            <textarea id="issue" rows="3" placeholder="Provide as much detail as possible..." required></textarea>
-                        </div>
+
                     </div>
-                    <button type="submit">Submit Support Ticket</button>
+
+
+                    <div class="form-row">
+
+                        <div class="form-group">
+
+                            <label>Priority</label>
+
+                            <select id="priority" required>
+
+                                <option value="">Select Priority</option>
+
+                                <option value="Low">
+                                    Low
+                                </option>
+
+                                <option value="Medium">
+                                    Medium
+                                </option>
+
+                                <option value="High">
+                                    High
+                                </option>
+
+                                <option value="Critical">
+                                    Critical
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label>Assigned Technician</label>
+
+                            <select id="technician">
+
+                                <option value="Dave">
+                                    Dave
+                                </option>
+
+                                <option value="IT Support">
+                                    IT Support
+                                </option>
+
+                                <option value="Network Team">
+                                    Network Team
+                                </option>
+
+                            </select>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>Description</label>
+
+                        <textarea
+                            id="description"
+                            rows="6"
+                            placeholder="Describe the problem..."
+                            required></textarea>
+
+                    </div>
+
+
+                    <div class="form-buttons">
+
+                        <button
+                            type="button"
+                            class="cancel-btn"
+                            onclick="showPage('dashboard')">
+
+                            Cancel
+
+                        </button>
+
+
+                        <button
+                            type="submit"
+                            class="primary-btn">
+
+                            <i class="fa-solid fa-paper-plane"></i>
+
+                            Submit Ticket
+
+                        </button>
+
+                    </div>
+
                 </form>
+
             </div>
 
-            <!-- Tickets List Card -->
-            <div class="card">
-                <h2>Active Tickets</h2>
-                <div id="ticketList">
-                    <div class="empty-state">No active tickets found.</div>
+        </section>
+
+
+
+        <!-- ================= ALL TICKETS ================= -->
+
+        <section id="allTickets" class="page">
+
+            <div class="section-box">
+
+                <div class="section-header">
+
+                    <h3>All Tickets</h3>
+
+                    <input
+                        type="text"
+                        id="searchTicket"
+                        placeholder="Search tickets..."
+                        onkeyup="searchTickets()">
+
                 </div>
+
+
+                <div class="table-container">
+
+                    <table>
+
+                        <thead>
+
+                            <tr>
+                                <th>Ticket ID</th>
+                                <th>Subject</th>
+                                <th>Category</th>
+                                <th>Priority</th>
+                                <th>Status</th>
+                                <th>Technician</th>
+                                <th>Date</th>
+                            </tr>
+
+                        </thead>
+
+                        <tbody id="allTicketsTable">
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
             </div>
-        </main>
-    </div>
 
-    <script>
-        const loginScreen = document.getElementById('loginScreen');
-        const appContainer = document.getElementById('appContainer');
-        const loginForm = document.getElementById('loginForm');
+        </section>
 
-        const form = document.getElementById('ticketForm');
-        const ticketList = document.getElementById('ticketList');
-        
-        // Stat elements
-        const statTotal = document.getElementById('statTotal');
-        const statOpen = document.getElementById('statOpen');
-        const statHigh = document.getElementById('statHigh');
-        const statResolved = document.getElementById('statResolved');
 
-        let tickets = JSON.parse(localStorage.getItem('tickets')) || [];
-        let isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
 
-        // Check initial login state
-        if (isLoggedIn) {
-            showDashboard();
-        }
+        <!-- ================= USERS ================= -->
 
-        loginForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            // Simple authentication check (accepts any credentials for this demo)
-            localStorage.setItem('isLoggedIn', 'true');
-            showDashboard();
-        });
+        <section id="users" class="page">
 
-        function logout() {
-            localStorage.setItem('isLoggedIn', 'false');
-            loginScreen.style.display = 'flex';
-            appContainer.style.display = 'none';
-        }
+            <div class="section-box">
 
-        function showDashboard() {
-            loginScreen.style.display = 'none';
-            appContainer.style.display = 'flex';
-            updateDashboard();
-        }
+                <h3>Users</h3>
 
-        form.addEventListener('submit', function(e) {
-            e.preventDefault();
-            const name = document.getElementById('name').value;
-            const category = document.getElementById('category').value;
-            const priority = document.getElementById('priority').value;
-            const issue = document.getElementById('issue').value;
+                <div class="user-list">
 
-            const newTicket = {
-                id: Math.floor(1000 + Math.random() * 9000),
-                name,
-                category,
-                priority,
-                issue,
-                status: 'Open',
-                date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })
-            };
+                    <div class="user-card">
+                        <div class="avatar">D</div>
 
-            tickets.unshift(newTicket);
-            localStorage.setItem('tickets', JSON.stringify(tickets));
-
-            updateDashboard();
-            form.reset();
-        });
-
-        function toggleStatus(id) {
-            tickets = tickets.map(t => {
-                if (t.id === id) {
-                    t.status = t.status === 'Open' ? 'Resolved' : 'Open';
-                }
-                return t;
-            });
-            localStorage.setItem('tickets', JSON.stringify(tickets));
-            updateDashboard();
-        }
-
-        function deleteTicket(id) {
-            tickets = tickets.filter(t => t.id !== id);
-            localStorage.setItem('tickets', JSON.stringify(tickets));
-            updateDashboard();
-        }
-
-        function updateDashboard() {
-            statTotal.textContent = tickets.length;
-            statOpen.textContent = tickets.filter(t => t.status === 'Open').length;
-            statHigh.textContent = tickets.filter(t => t.priority === 'High' && t.status === 'Open').length;
-            statResolved.textContent = tickets.filter(t => t.status === 'Resolved').length;
-
-            if (tickets.length === 0) {
-                ticketList.innerHTML = '<div class="empty-state">No active tickets found.</div>';
-                return;
-            }
-
-            ticketList.innerHTML = tickets.map(t => `
-                <div class="ticket-item">
-                    <div class="ticket-info">
-                        <h3>#${t.id} - ${t.category}</h3>
-                        <p>${t.issue}</p>
-                        <div class="meta">
-                            <span>By <strong>${t.name}</strong></span>
-                            <span>📅 ${t.date}</span>
-                            <span class="badge ${t.priority.toLowerCase()}">${t.priority}</span>
-                            <span class="badge status-${t.status.toLowerCase()}">${t.status}</span>
+                        <div>
+                            <strong>Dave</strong>
+                            <p>IT Support</p>
                         </div>
                     </div>
-                    <div class="ticket-actions">
-                        <button class="btn-sm" onclick="toggleStatus(${t.id})">${t.status === 'Open' ? 'Resolve' : 'Reopen'}</button>
-                        <button class="btn-sm" style="background:#fee2e2; color:#991b1b;" onclick="deleteTicket(${t.id})">Delete</button>
+
+
+                    <div class="user-card">
+                        <div class="avatar">A</div>
+
+                        <div>
+                            <strong>Admin</strong>
+                            <p>Administrator</p>
+                        </div>
+                    </div>
+
+
+                    <div class="user-card">
+                        <div class="avatar">U</div>
+
+                        <div>
+                            <strong>User</strong>
+                            <p>Employee</p>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ================= REPORTS ================= -->
+
+        <section id="reports" class="page">
+
+            <div class="cards">
+
+                <div class="card">
+                    <div>
+                        <p>Total Tickets</p>
+                        <h1 id="reportTotal">0</h1>
                     </div>
                 </div>
-            `).join('');
-        }
-    </script>
+
+                <div class="card">
+                    <div>
+                        <p>Resolved</p>
+                        <h1 id="reportResolved">0</h1>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div>
+                        <p>Open</p>
+                        <h1 id="reportOpen">0</h1>
+                    </div>
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <script src="script.js"></script>
+
 </body>
 </html>
